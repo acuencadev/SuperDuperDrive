@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public class User implements UserDetails {
 
-    private int userId;
+    private Long userId;
     private String username;
     private String salt;
     private String password;
@@ -18,7 +18,7 @@ public class User implements UserDetails {
 
     public User() { }
 
-    public User(int userId, String username, String salt, String password, String firstName, String lastName) {
+    public User(Long userId, String username, String salt, String password, String firstName, String lastName) {
         this.userId = userId;
         this.username = username;
         this.salt = salt;
@@ -55,11 +55,11 @@ public class User implements UserDetails {
         return true;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
