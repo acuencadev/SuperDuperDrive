@@ -16,7 +16,7 @@ public interface NotesMapper {
     @Select("SELECT * FROM notes WHERE userid = #{userId}")
     List<Note> findByUserId(Long userId);
 
-    @Select("SELECT * FROM notes WHERE noteid = #{noteId}")
+    @Select("SELECT * FROM notes WHERE noteid = #{id}")
     Note findById(Long id);
 
     @Insert("INSERT INTO notes (notetitle, notedescription, userid) VALUES (#{note.noteTitle}, #{note.noteDescription}, #{userId})")

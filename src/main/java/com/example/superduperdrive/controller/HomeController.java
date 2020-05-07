@@ -1,6 +1,7 @@
 package com.example.superduperdrive.controller;
 
 import com.example.superduperdrive.model.User;
+import com.example.superduperdrive.services.FileService;
 import com.example.superduperdrive.services.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,10 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
 
     private NoteService noteService;
+    private FileService fileService;
 
     @Autowired
-    public HomeController(NoteService noteService) {
+    public HomeController(NoteService noteService, FileService fileService) {
         this.noteService = noteService;
+        this.fileService = fileService;
     }
 
     @GetMapping(value = {"/", "/dashboard"})
@@ -25,6 +28,7 @@ public class HomeController {
         ModelAndView modelAndView = new ModelAndView("home");
 
         modelAndView.addObject("notes", noteService.getAllByUserId(user.getUserId()));
+        modelAndView.addObject("files", fileService.getAllByUserId(user.getUserId()));
 
         return modelAndView;
     }

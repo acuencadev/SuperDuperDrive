@@ -6,3 +6,7 @@ spring:
     password:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+  servlet:
+    multipart:
+      max-request-size: 25MB
+      max-file-size: 25MB
