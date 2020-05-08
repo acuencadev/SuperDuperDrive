@@ -31,6 +31,14 @@ class SuperDuperDriveApplicationTests {
     private static final String DEMO_NOTE_ALT_TITLE = "This is the alternate title";
     private static final String DEMO_NOTE_ALT_DESCRIPTION = "This is the alternate description";
 
+    private static final String DEMO_CREDENTIAL_URL = "http://www.gmail.com";
+    private static final String DEMO_CREDENTIAL_USERNAME = "dummy@gmail.com";
+    private static final String DEMO_CREDENTIAL_PASSWORD = "123456";
+
+    private static final String DEMO_CREDENTIAL_ALT_URL = "http://www.gmail.com";
+    private static final String DEMO_CREDENTIAL_ALT_USERNAME = "changed@gmail.com";
+    private static final String DEMO_CREDENTIAL_ALT_PASSWORD = "123456789";
+
     @LocalServerPort
     private int port;
 
@@ -208,7 +216,6 @@ class SuperDuperDriveApplicationTests {
         assertThat(webDriver.getTitle()).isEqualTo("Home");
 
         // Step 2: Edit the note
-
         JavascriptExecutor executor = (JavascriptExecutor) webDriver;
 
         WebElement navNotesTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
@@ -273,7 +280,7 @@ class SuperDuperDriveApplicationTests {
 
         assertThat(webDriver.getTitle()).isEqualTo("Home");
 
-        // Step 2: Edit the note
+        // Step 2: Delete the note
         JavascriptExecutor executor = (JavascriptExecutor) webDriver;
 
         WebElement navNotesTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
@@ -301,5 +308,193 @@ class SuperDuperDriveApplicationTests {
 
         assertThat(navNotesTab.getText().contains(DEMO_NOTE_ALT_TITLE)).isFalse();
         assertThat(navNotesTab.getText().contains(DEMO_NOTE_ALT_DESCRIPTION)).isFalse();
+    }
+
+    @Test
+    @Order(6)
+    public void logsUserCreateCredentialAndVerifyItExists() {
+        WebDriverWait wait = new WebDriverWait(webDriver, 10);
+
+        // Step 1: login the user
+        webDriver.get(String.format("http://localhost:%s/login", this.port));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Login");
+
+        WebElement usernameInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
+        usernameInputField.sendKeys(DEMO_USER_USERNAME);
+
+        WebElement passwordInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputPassword")));
+        passwordInputField.sendKeys(DEMO_USER_PASSWORD);
+
+        WebElement loginButton = webDriver.findElement(By.id("buttonLogin"));
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton)).submit();
+
+        WebElement logoutButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonLogout")));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Home");
+
+        // Step 2: Create the credential
+        JavascriptExecutor executor = (JavascriptExecutor) webDriver;
+
+        WebElement navCredentialsTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+
+        executor.executeScript("arguments[0].click()", navCredentialsTab);
+
+        WebElement addCredentialButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonAddNewCredential")));
+        addCredentialButton.click();
+
+        WebElement credentialUrlInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+        credentialUrlInputField.clear();
+        credentialUrlInputField.sendKeys(DEMO_CREDENTIAL_URL);
+
+        WebElement credentialUsernameInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
+        credentialUsernameInputField.clear();
+        credentialUsernameInputField.sendKeys(DEMO_CREDENTIAL_USERNAME);
+
+        WebElement credentialPasswordInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
+        credentialPasswordInputField.clear();
+        credentialPasswordInputField.sendKeys(DEMO_CREDENTIAL_PASSWORD);
+
+        WebElement saveCredentialButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("saveCredentialButton")));
+
+        saveCredentialButton.click();
+
+        WebElement successDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("divSuccess")));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Result");
+
+        // Step 3: Check if the note is listed
+        webDriver.get(String.format("http://localhost:%s/dashboard", this.port));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Home");
+
+        navCredentialsTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+
+        executor.executeScript("arguments[0].click()", navCredentialsTab);
+
+        assertThat(navCredentialsTab.getText().contains(DEMO_CREDENTIAL_URL));
+        assertThat(navCredentialsTab.getText().contains(DEMO_CREDENTIAL_USERNAME));
+    }
+
+    @Test
+    @Order(7)
+    public void updateExistingCredentialAndVerifyChangesAreReflected() {
+        WebDriverWait wait = new WebDriverWait(webDriver, 10);
+
+        // Step 1: login the user
+        webDriver.get(String.format("http://localhost:%s/login", this.port));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Login");
+
+        WebElement usernameInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
+        usernameInputField.sendKeys(DEMO_USER_USERNAME);
+
+        WebElement passwordInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputPassword")));
+        passwordInputField.sendKeys(DEMO_USER_PASSWORD);
+
+        WebElement loginButton = webDriver.findElement(By.id("buttonLogin"));
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton)).submit();
+
+        WebElement logoutButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonLogout")));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Home");
+
+        // Step 2: Edit the credential
+        JavascriptExecutor executor = (JavascriptExecutor) webDriver;
+
+        WebElement navCredentialsTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+
+        executor.executeScript("arguments[0].click()", navCredentialsTab);
+
+        List<WebElement> editButtons = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("edit-credential-button")));
+
+        if (editButtons.size() > 0) {
+            editButtons.get(0).click();
+
+            WebElement credentialUrlInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+            credentialUrlInputField.clear();
+            credentialUrlInputField.sendKeys(DEMO_CREDENTIAL_ALT_URL);
+
+            WebElement credentialUsernameInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
+            credentialUsernameInputField.clear();
+            credentialUsernameInputField.sendKeys(DEMO_CREDENTIAL_ALT_USERNAME);
+
+            WebElement credentialPasswordInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
+            credentialPasswordInputField.clear();
+            credentialPasswordInputField.sendKeys(DEMO_CREDENTIAL_ALT_PASSWORD);
+
+            WebElement saveCredentialButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("saveCredentialButton")));
+
+            saveCredentialButton.click();
+
+            WebElement successDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("divSuccess")));
+
+            assertThat(webDriver.getTitle()).isEqualTo("Result");
+        }
+
+        // Step 3: Check that credential changes are reflected
+        webDriver.get(String.format("http://localhost:%s/dashboard", this.port));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Home");
+
+        navCredentialsTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+
+        executor.executeScript("arguments[0].click()", navCredentialsTab);
+
+        assertThat(navCredentialsTab.getText().contains(DEMO_CREDENTIAL_URL));
+        assertThat(navCredentialsTab.getText().contains(DEMO_CREDENTIAL_USERNAME));
+    }
+
+    @Test
+    @Order(8)
+    public void deleteExistingCredentialAndVerifyItIsNoLongerListed() {
+        WebDriverWait wait = new WebDriverWait(webDriver, 10);
+
+        // Step 1: login the user
+        webDriver.get(String.format("http://localhost:%s/login", this.port));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Login");
+
+        WebElement usernameInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
+        usernameInputField.sendKeys(DEMO_USER_USERNAME);
+
+        WebElement passwordInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputPassword")));
+        passwordInputField.sendKeys(DEMO_USER_PASSWORD);
+
+        WebElement loginButton = webDriver.findElement(By.id("buttonLogin"));
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton)).submit();
+
+        WebElement logoutButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonLogout")));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Home");
+
+        // Step 2: Delete the credential
+        JavascriptExecutor executor = (JavascriptExecutor) webDriver;
+
+        WebElement navCredentialsTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+
+        executor.executeScript("arguments[0].click()", navCredentialsTab);
+
+        List<WebElement> deleteButtons = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("delete-credential-button")));
+
+        if (deleteButtons.size() > 0) {
+            deleteButtons.get(0).click();
+
+            WebElement successDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("divSuccess")));
+
+            assertThat(webDriver.getTitle()).isEqualTo("Result");
+        }
+
+        // Step 3: Check that the credential is no longer listed.
+        webDriver.get(String.format("http://localhost:%s/dashboard", this.port));
+
+        assertThat(webDriver.getTitle()).isEqualTo("Home");
+
+        navCredentialsTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
+
+        executor.executeScript("arguments[0].click()", navCredentialsTab);
+
+        assertThat(navCredentialsTab.getText().contains(DEMO_CREDENTIAL_ALT_URL)).isFalse();
+        assertThat(navCredentialsTab.getText().contains(DEMO_CREDENTIAL_ALT_USERNAME)).isFalse();
     }
 }
