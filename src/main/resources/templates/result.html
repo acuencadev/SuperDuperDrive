@@ -10,7 +10,7 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-            <div th:if="${param.success}" class="alert alert-success fill-parent">
+            <div th:if="${param.success}" id="divSuccess" class="alert alert-success fill-parent">
                 <h1 class="display-5">Success</h1>
                 <span>Your changes were successfully saved. Click <a th:href="@{/dashboard}">here</a> to continue.</span>
             </div>
