@@ -42,8 +42,6 @@ public class FileController {
 
             ByteArrayResource resource = new ByteArrayResource(file.getFileData());
 
-//            return new ResponseEntity(resource, headers, HttpStatus.OK);
-
             return ResponseEntity
                     .ok()
                     .headers(headers)

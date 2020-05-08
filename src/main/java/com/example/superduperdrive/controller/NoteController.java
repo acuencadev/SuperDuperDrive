@@ -23,11 +23,16 @@ public class NoteController {
     @PostMapping(value = "/add-note")
     public String addNote(Authentication authentication, Note note) {
         User user = (User) authentication.getPrincipal();
+        boolean result;
 
         if (note.getNoteId() == 0) {
-            noteService.create(note, user.getUserId());
+            result = noteService.create(note, user.getUserId());
         } else {
-            noteService.update(note);
+            result = noteService.update(note);
+        }
+
+        if (!result) {
+            return "redirect:/result?error";
         }
 
         return "redirect:/result?success";
@@ -35,12 +40,12 @@ public class NoteController {
 
     @GetMapping(value = "/delete-note/{id}")
     public String deleteNote(@PathVariable("id") Long id) {
-        if (id > 0) {
-            noteService.delete(id);
+        boolean result = noteService.delete(id);
 
-            return "redirect:/result?success";
+        if (!result) {
+            return "redirect:/result?error";
         }
 
-        return "redirect:/result?error";
+        return "redirect:/result?success";
     }
 }

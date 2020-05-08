@@ -29,15 +29,15 @@ public class NoteService {
         return notesMapper.findById(id);
     }
 
-    public Integer create(Note note, Long userId) {
-        return notesMapper.create(note, userId);
+    public boolean create(Note note, Long userId) {
+        return notesMapper.create(note, userId) > 0;
     }
 
-    public Integer update(Note note) {
-        return notesMapper.update(note);
+    public boolean update(Note note) {
+        return notesMapper.update(note) > 0;
     }
 
-    public Integer delete(Long id) {
-        return notesMapper.delete(id);
+    public boolean delete(Long id) {
+        return notesMapper.delete(id) > 0;
     }
 }
