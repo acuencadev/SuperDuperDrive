@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface CredentialMapper {
+public interface CredentialsMapper {
 
     @Select("SELECT * FROM credentials")
     List<Credential> findAll();

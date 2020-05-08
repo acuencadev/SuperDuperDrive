@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface UserMapper {
+public interface UsersMapper {
 
     @Select("SELECT * FROM users")
     List<User> findAll();

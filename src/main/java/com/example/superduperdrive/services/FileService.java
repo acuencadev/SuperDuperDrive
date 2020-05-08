@@ -1,6 +1,6 @@
 package com.example.superduperdrive.services;
 
-import com.example.superduperdrive.mapper.FileMapper;
+import com.example.superduperdrive.mapper.FilesMapper;
 import com.example.superduperdrive.model.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +11,10 @@ import java.util.List;
 @Service
 public class FileService {
 
-    private FileMapper fileMapper;
+    private FilesMapper fileMapper;
 
     @Autowired
-    public FileService(FileMapper fileMapper) {
+    public FileService(FilesMapper fileMapper) {
         this.fileMapper = fileMapper;
     }
 

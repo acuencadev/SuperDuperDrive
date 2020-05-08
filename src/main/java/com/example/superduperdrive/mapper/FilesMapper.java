@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface FileMapper {
+public interface FilesMapper {
 
     @Select("SELECT * FROM files")
     List<File> findAll();

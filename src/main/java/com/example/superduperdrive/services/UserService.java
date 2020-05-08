@@ -1,6 +1,6 @@
 package com.example.superduperdrive.services;
 
-import com.example.superduperdrive.mapper.UserMapper;
+import com.example.superduperdrive.mapper.UsersMapper;
 import com.example.superduperdrive.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements UserDetailsService {
 
-    private UserMapper userMapper;
+    private UsersMapper userMapper;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UsersMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }

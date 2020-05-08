@@ -1,6 +1,6 @@
 package com.example.superduperdrive.services;
 
-import com.example.superduperdrive.mapper.CredentialMapper;
+import com.example.superduperdrive.mapper.CredentialsMapper;
 import com.example.superduperdrive.model.Credential;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ import java.util.List;
 @Service
 public class CredentialService {
 
-    private CredentialMapper credentialMapper;
+    private CredentialsMapper credentialMapper;
     private EncryptionService encryptionService;
 
     @Autowired
-    public CredentialService(CredentialMapper credentialMapper, EncryptionService encryptionService) {
+    public CredentialService(CredentialsMapper credentialMapper, EncryptionService encryptionService) {
         this.credentialMapper = credentialMapper;
         this.encryptionService = encryptionService;
     }
