@@ -33,11 +33,11 @@ public class NoteService {
         return notesMapper.create(note, userId) > 0;
     }
 
-    public boolean update(Note note) {
-        return notesMapper.update(note) > 0;
+    public boolean update(Note note, Long userId) {
+        return notesMapper.update(note, userId) > 0;
     }
 
-    public boolean delete(Long id) {
-        return notesMapper.delete(id) > 0;
+    public boolean delete(Long id, Long userId) {
+        return notesMapper.delete(id, userId) > 0;
     }
 }

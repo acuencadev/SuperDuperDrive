@@ -69,14 +69,14 @@ public class CredentialService {
         return result > 0;
     }
 
-    public boolean update(Credential credential) {
-        Integer result = credentialMapper.update(encryptPassword(credential));
+    public boolean update(Credential credential, Long userId) {
+        Integer result = credentialMapper.update(encryptPassword(credential), userId);
 
         return result > 0;
     }
 
-    public boolean delete(Long id) {
-        Integer result = credentialMapper.delete(id);
+    public boolean delete(Long id, Long userId) {
+        Integer result = credentialMapper.delete(id, userId);
 
         return result > 0;
     }

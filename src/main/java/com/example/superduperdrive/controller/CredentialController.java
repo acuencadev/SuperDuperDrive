@@ -28,7 +28,7 @@ public class CredentialController {
         if (credential.getCredentialId() == 0) {
             result = credentialService.create(credential, user.getUserId());
         } else {
-            result = credentialService.update(credential);
+            result = credentialService.update(credential, user.getUserId());
         }
 
         if (!result) {
@@ -39,8 +39,9 @@ public class CredentialController {
     }
 
     @GetMapping(value = "/delete-credential/{id}")
-    public String deleteCredential(@PathVariable("id") Long id) {
-        boolean result = credentialService.delete(id);
+    public String deleteCredential(Authentication authentication, @PathVariable("id") Long id) {
+        User user = (User) authentication.getPrincipal();
+        boolean result = credentialService.delete(id, user.getUserId());
 
         if (!result) {
             return "redirect:/result?error";

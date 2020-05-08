@@ -28,8 +28,9 @@ public class FileController {
     }
 
     @GetMapping("/download-file/{id}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable("id") Long id) {
-        File file = fileService.getById(id);
+    public ResponseEntity<Resource> downloadFile(Authentication authentication, @PathVariable("id") Long id) {
+        User user = (User) authentication.getPrincipal();
+        File file = fileService.getById(id, user.getUserId());
 
         if (file != null) {
             HttpHeaders headers = new HttpHeaders();
@@ -69,8 +70,9 @@ public class FileController {
     }
 
     @GetMapping(value = "/delete-file/{id}")
-    public String deleteFile(@PathVariable("id") Long id) {
-        boolean result = fileService.deleteFile(id);
+    public String deleteFile(Authentication authentication, @PathVariable("id") Long id) {
+        User user = (User) authentication.getPrincipal();
+        boolean result = fileService.deleteFile(id, user.getUserId());
 
         if (!result) {
             return "redirect:/result?error";

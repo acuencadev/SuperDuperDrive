@@ -26,8 +26,8 @@ public class FileService {
         return fileMapper.findByUserId(userId);
     }
 
-    public File getById(Long id) {
-        return fileMapper.findById(id);
+    public File getById(Long id, Long userId) {
+        return fileMapper.findById(id, userId);
     }
 
     public boolean addFile(MultipartFile file, Long userId) {
@@ -44,8 +44,8 @@ public class FileService {
         }
     }
 
-    public boolean deleteFile(Long id) {
-        Integer result = fileMapper.delete(id);
+    public boolean deleteFile(Long id, Long userId) {
+        Integer result = fileMapper.delete(id, userId);
 
         return result > 0;
     }

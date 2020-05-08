@@ -28,7 +28,7 @@ public class NoteController {
         if (note.getNoteId() == 0) {
             result = noteService.create(note, user.getUserId());
         } else {
-            result = noteService.update(note);
+            result = noteService.update(note, user.getUserId());
         }
 
         if (!result) {
@@ -39,8 +39,9 @@ public class NoteController {
     }
 
     @GetMapping(value = "/delete-note/{id}")
-    public String deleteNote(@PathVariable("id") Long id) {
-        boolean result = noteService.delete(id);
+    public String deleteNote(Authentication authentication, @PathVariable("id") Long id) {
+        User user = (User) authentication.getPrincipal();
+        boolean result = noteService.delete(id, user.getUserId());
 
         if (!result) {
             return "redirect:/result?error";

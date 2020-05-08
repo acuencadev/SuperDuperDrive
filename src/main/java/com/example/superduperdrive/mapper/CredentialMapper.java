@@ -22,9 +22,9 @@ public interface CredentialMapper {
     @Insert("INSERT INTO credentials (url, username, key, password, userid) VALUES (#{credential.url}, #{credential.username}, #{credential.key}, #{credential.password}, #{userId})")
     Integer create(@Param("credential") Credential credential, Long userId);
 
-    @Update("UPDATE credentials SET url = #{credential.url}, username = #{credential.username}, key = #{credential.key}, password = #{credential.password} WHERE credentialid = #{credential.credentialId}")
-    Integer update(@Param("credential") Credential credential);
+    @Update("UPDATE credentials SET url = #{credential.url}, username = #{credential.username}, key = #{credential.key}, password = #{credential.password} WHERE credentialid = #{credential.credentialId} AND userid = #{userid}")
+    Integer update(@Param("credential") Credential credential, Long userId);
 
-    @Delete("DELETE FROM credentials WHERE credentialid = #{id}")
-    Integer delete(Long id);
+    @Delete("DELETE FROM credentials WHERE credentialid = #{id} AND userid = #{userid}")
+    Integer delete(Long id, Long userId);
 }
