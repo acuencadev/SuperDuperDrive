@@ -25,6 +25,6 @@ public interface FilesMapper {
     @Update("UPDATE files SET filename = #{file.fileName}, contenttype = #{file.contentType}, filesize = #{file.fileSize}, filedata = #{file.fileData} WHERE fileid = #{file.fileId} AND userid = #{userid}")
     Integer update(@Param("file") File file, Long userId);
 
-    @Delete("DELETE FROM files WHERE fileId = #{id} AND userid = #{userid}")
+    @Delete("DELETE FROM files WHERE fileId = #{id} AND userid = #{userId}")
     Integer delete(Long id, Long userId);
 }
