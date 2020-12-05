@@ -31,7 +31,14 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User register(User user) throws Exception {
+    public User register(User user) throws UsernameAlreadyExistException {
+        User existingUser = userMapper.findByUsername(user.getUsername());
+
+        if (existingUser != null)
+        {
+            throw new UsernameAlreadyExistException("Username already exists.");
+        }
+
         String hashedPassword = passwordEncoder.encode(user.getPassword());
 
         user.setPassword(hashedPassword);
