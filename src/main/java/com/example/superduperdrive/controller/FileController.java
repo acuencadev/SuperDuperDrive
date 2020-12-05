@@ -56,6 +56,10 @@ public class FileController {
 
     @PostMapping(value = "/add-file")
     public String addFile(Authentication authentication, MultipartFile fileUpload) {
+        if (fileUpload.getSize() * 0.00000095367432 > 25) {
+            return "redirect:/result?error";
+        }
+
         User user = (User) authentication.getPrincipal();
 
         if (!fileUpload.isEmpty()) {
