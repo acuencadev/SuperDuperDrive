@@ -19,6 +19,9 @@ public interface FilesMapper {
     @Select("SELECT * FROM files WHERE fileid = #{id} AND userid = #{userid}")
     File findById(Long id, Long userId);
 
+    @Select("SELECT * FROM files WHERE filename = #{fileName} AND userid = #{userId}")
+    File findByNameAndUserId(Long userId, String fileName);
+
     @Insert("INSERT INTO files (filename, contenttype, filesize, filedata, userid) VALUES (#{file.fileName}, #{file.contentType}, #{file.fileSize}, #{file.fileData}, #{userId})")
     Integer create(@Param("file") File file, Long userId);
 

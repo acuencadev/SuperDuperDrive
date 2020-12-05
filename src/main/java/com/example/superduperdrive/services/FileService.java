@@ -32,6 +32,11 @@ public class FileService {
 
     public boolean addFile(MultipartFile file, Long userId) {
         try {
+            if (fileMapper.findByNameAndUserId(userId, file.getOriginalFilename()) != null)
+            {
+                return false;
+            }
+
             File newFile = new File(file.getOriginalFilename(), file.getContentType(),
                     file.getSize(), file.getBytes());
 
