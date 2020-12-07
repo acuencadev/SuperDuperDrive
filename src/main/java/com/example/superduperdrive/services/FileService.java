@@ -30,11 +30,11 @@ public class FileService {
         return fileMapper.findById(id, userId);
     }
 
-    public boolean addFile(MultipartFile file, Long userId) {
+    public FileOperationResponse addFile(MultipartFile file, Long userId) {
         try {
             if (fileMapper.findByNameAndUserId(userId, file.getOriginalFilename()) != null)
             {
-                return false;
+                return FileOperationResponse.FileExists;
             }
 
             File newFile = new File(file.getOriginalFilename(), file.getContentType(),
@@ -42,16 +42,16 @@ public class FileService {
 
             fileMapper.create(newFile, userId);
 
-            return true;
+            return FileOperationResponse.FileAdded;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return FileOperationResponse.FileNotCreated;
         }
     }
 
-    public boolean deleteFile(Long id, Long userId) {
+    public FileOperationResponse deleteFile(Long id, Long userId) {
         Integer result = fileMapper.delete(id, userId);
 
-        return result > 0;
+        return (result > 0) ? FileOperationResponse.FileDeleted : FileOperationResponse.FileNotDeleted;
     }
 }

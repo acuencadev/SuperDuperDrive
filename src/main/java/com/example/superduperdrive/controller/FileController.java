@@ -2,6 +2,7 @@ package com.example.superduperdrive.controller;
 
 import com.example.superduperdrive.model.File;
 import com.example.superduperdrive.model.User;
+import com.example.superduperdrive.services.FileOperationResponse;
 import com.example.superduperdrive.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -57,31 +58,35 @@ public class FileController {
     @PostMapping(value = "/add-file")
     public String addFile(Authentication authentication, MultipartFile fileUpload) {
         if (fileUpload.getSize() * 0.00000095367432 > 25) {
-            return "redirect:/result?error";
+            return "redirect:/result?error&message=File size must be less than 25MB.";
         }
 
         User user = (User) authentication.getPrincipal();
+        FileOperationResponse result = FileOperationResponse.FileNotCreated;
 
         if (!fileUpload.isEmpty()) {
-            boolean result = fileService.addFile(fileUpload, user.getUserId());
-
-            if (result) {
-                return "redirect:/result?success";
-            }
+            result = fileService.addFile(fileUpload, user.getUserId());
         }
 
-        return "redirect:/result?error";
+        switch (result) {
+            case FileAdded:
+                return "redirect:/result?success&message=File upload successfully.";
+            case FileExists:
+                return "redirect:/result?error&message=The file already exists.";
+            default:
+                return "redirect:/result?error";
+        }
     }
 
     @GetMapping(value = "/delete-file/{id}")
     public String deleteFile(Authentication authentication, @PathVariable("id") Long id) {
         User user = (User) authentication.getPrincipal();
-        boolean result = fileService.deleteFile(id, user.getUserId());
+        FileOperationResponse result = fileService.deleteFile(id, user.getUserId());
 
-        if (!result) {
-            return "redirect:/result?error";
+        if (result == FileOperationResponse.FileDeleted) {
+            return "redirect:/result?success";
         }
 
-        return "redirect:/result?success";
+        return "redirect:/result?error&message=Could not delete the file.";
     }
 }
