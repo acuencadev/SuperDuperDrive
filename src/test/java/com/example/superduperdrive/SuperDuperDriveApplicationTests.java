@@ -62,4 +62,12 @@ class SuperDuperDriveApplicationTests {
     public void beforeEach() {
         baseUrl = "http://localhost:" + port;
     }
+
+    @Test
+    @Order(1)
+    public void getDashboardWithoutLogin() {
+        driver.get(baseUrl);
+
+        assertThat(driver.getTitle()).isEqualTo("Login");
+    }
 }
