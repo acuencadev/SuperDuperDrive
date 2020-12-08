@@ -70,4 +70,39 @@ class SuperDuperDriveApplicationTests {
 
         assertThat(driver.getTitle()).isEqualTo("Login");
     }
+
+    @Test
+    @Order(2)
+    public void signupUserLoginAndGoToDashboard() {
+        // Sign up the user
+        driver.get(baseUrl + "/signup");
+
+        SignupPage signupPage = new SignupPage(driver);
+
+        assertThat(driver.getTitle()).isEqualTo("Sign Up");
+
+        signupPage.signup(DEMO_USER_FIRST_NAME, DEMO_USER_LAST_NAME, DEMO_USER_USERNAME,
+                DEMO_USER_PASSWORD);
+
+        // Login the user
+        driver.get(baseUrl + "/login");
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login(DEMO_USER_USERNAME, DEMO_USER_PASSWORD);
+
+        // Verify that the user can access the home page
+        driver.get(baseUrl);
+
+        HomePage homePage = new HomePage(driver);
+
+        assertThat(driver.getTitle()).isEqualTo("Home");
+
+        // Log out the user
+        homePage.logout();
+
+        // Verify that the home page is no longer accessible
+        driver.get(baseUrl);
+
+        assertThat(driver.getTitle()).isEqualTo("Login");
+    }
 }
