@@ -18,7 +18,7 @@
                      Click <a th:href="@{/dashboard}">here</a> to continue.</span>
                 </div>
             </div>
-            <div th:if="${param.error}" class="alert alert-danger fill-parent">
+            <div th:if="${param.error}" id="divError" class="alert alert-danger fill-parent">
                 <h1 class="display-5">Error</h1>
                 <div>
                     <span th:if="${param.message}" th:text="${param.message}"></span>
