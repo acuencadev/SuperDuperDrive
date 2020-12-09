@@ -233,4 +233,56 @@ class SuperDuperDriveApplicationTests {
         assertThat(navNotesTab.getText().contains(DEMO_NOTE_ALT_DESCRIPTION));
     }
 
+    @Test
+    @Order(5)
+    public void deleteExistingNoteAndVerifyItIsNoLongerListed() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        // Step 1: login the user
+        driver.get(String.format("http://localhost:%s/login", this.port));
+
+        assertThat(driver.getTitle()).isEqualTo("Login");
+
+        WebElement usernameInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
+        usernameInputField.sendKeys(DEMO_USER_USERNAME);
+
+        WebElement passwordInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputPassword")));
+        passwordInputField.sendKeys(DEMO_USER_PASSWORD);
+
+        WebElement loginButton = driver.findElement(By.id("buttonLogin"));
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton)).submit();
+
+        WebElement logoutButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonLogout")));
+
+        assertThat(driver.getTitle()).isEqualTo("Home");
+
+        // Step 2: Delete the note
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+
+        WebElement navNotesTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+
+        executor.executeScript("arguments[0].click()", navNotesTab);
+
+        List<WebElement> deleteButtons = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("delete-note-button")));
+
+        if (deleteButtons.size() > 0) {
+            deleteButtons.get(0).click();
+
+            WebElement successDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("divSuccess")));
+
+            assertThat(driver.getTitle()).isEqualTo("Result");
+        }
+
+        // Step 3: Check that the note is no longer listed.
+        driver.get(String.format("http://localhost:%s/dashboard", this.port));
+
+        assertThat(driver.getTitle()).isEqualTo("Home");
+
+        navNotesTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+
+        executor.executeScript("arguments[0].click()", navNotesTab);
+
+        assertThat(navNotesTab.getText().contains(DEMO_NOTE_ALT_TITLE)).isFalse();
+        assertThat(navNotesTab.getText().contains(DEMO_NOTE_ALT_DESCRIPTION)).isFalse();
+    }
 }
