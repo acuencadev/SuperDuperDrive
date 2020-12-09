@@ -167,4 +167,70 @@ class SuperDuperDriveApplicationTests {
         assertThat(navNotesTab.getText().contains(DEMO_NOTE_TITLE));
         assertThat(navNotesTab.getText().contains(DEMO_NOTE_DESCRIPTION));
     }
+
+    @Test
+    @Order(4)
+    public void updateExistingNoteAndVerifyChangesAreReflected() {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        // Step 1: login the user
+        driver.get(String.format("http://localhost:%s/login", this.port));
+
+        assertThat(driver.getTitle()).isEqualTo("Login");
+
+        WebElement usernameInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
+        usernameInputField.sendKeys(DEMO_USER_USERNAME);
+
+        WebElement passwordInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputPassword")));
+        passwordInputField.sendKeys(DEMO_USER_PASSWORD);
+
+        WebElement loginButton = driver.findElement(By.id("buttonLogin"));
+        wait.until(ExpectedConditions.elementToBeClickable(loginButton)).submit();
+
+        WebElement logoutButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("buttonLogout")));
+
+        assertThat(driver.getTitle()).isEqualTo("Home");
+
+        // Step 2: Edit the note
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+
+        WebElement navNotesTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+
+        executor.executeScript("arguments[0].click()", navNotesTab);
+
+        List<WebElement> editButtons = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("edit-note-button")));
+
+        if (editButtons.size() > 0) {
+            editButtons.get(0).click();
+
+            WebElement titleInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-title")));
+            titleInputField.clear();
+            titleInputField.sendKeys(DEMO_NOTE_ALT_TITLE);
+
+            WebElement descriptionInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-description")));
+            descriptionInputField.clear();
+            descriptionInputField.sendKeys(DEMO_NOTE_ALT_DESCRIPTION);
+
+            WebElement saveNoteButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("saveNoteButton")));
+
+            saveNoteButton.click();
+
+            WebElement successDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("divSuccess")));
+
+            assertThat(driver.getTitle()).isEqualTo("Result");
+        }
+
+        // Step 3: Check that the note changes are reflected.
+        driver.get(String.format("http://localhost:%s/dashboard", this.port));
+
+        assertThat(driver.getTitle()).isEqualTo("Home");
+
+        navNotesTab = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-notes-tab")));
+
+        executor.executeScript("arguments[0].click()", navNotesTab);
+
+        assertThat(navNotesTab.getText().contains(DEMO_NOTE_ALT_TITLE));
+        assertThat(navNotesTab.getText().contains(DEMO_NOTE_ALT_DESCRIPTION));
+    }
+
 }
