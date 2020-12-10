@@ -16,7 +16,7 @@ public interface FilesMapper {
     @Select("SELECT * FROM files WHERE userid = #{userId}")
     List<File> findByUserId(Long userId);
 
-    @Select("SELECT * FROM files WHERE fileid = #{id} AND userid = #{userid}")
+    @Select("SELECT * FROM files WHERE fileid = #{id} AND userid = #{userId}")
     File findById(Long id, Long userId);
 
     @Select("SELECT * FROM files WHERE filename = #{fileName} AND userid = #{userId}")

@@ -37,7 +37,7 @@ public class FileController {
             HttpHeaders headers = new HttpHeaders();
 
             headers.add(HttpHeaders.CONTENT_DISPOSITION, String.format(
-                    "attachment; filename=", file.getFileName()));
+                    "attachment; filename=%s", file.getFileName()));
             headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
             headers.add("Pragma", "no-cache");
             headers.add("Expires", "0");
